@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<!-- Coding By CodingNepal - codingnepalweb.com -->
+<html lang="en" dir="ltr">
+
+<head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title> Registration or Sign Up form in HTML CSS | CodingLab </title>
+     <link rel="stylesheet" href="./css/register.css" />
+     <script>
+          document.addEventListener("DOMContentLoaded", function () {
+               // script.js
+               document
+                    .getElementById("fetchData")
+                    .addEventListener("click", fetchData);
+
+               function fetchData(e) {
+                    e.preventDefault();
+                    // Get the values of email and password from the form
+                    const email = document.getElementById("email").value;
+                    const password = document.getElementById("password").value;
+                    const name = document.getElementById("name").value;
+                    const mobile = document.getElementById("mobile").value;
+                    console.log("Email: ", email);
+                    console.log("Password: ", password);
+                    // Define the API endpoint and data to send
+                    const apiUrl = "https://bookapi-f82x.onrender.com/user/insert";
+                    const requestData = {
+                         // email: "xyz@gmail.com",
+                         // pwd: "12345",
+                         email: email,
+                         pwd: password,
+                         mobile: mobile,
+                         name: name,
+                    };
+
+                    fetch(apiUrl, {
+                         method: "POST",
+                         headers: {
+                              "Content-Type": "application/json",
+                              // Add any required headers here
+                         },
+                         body: JSON.stringify(requestData),
+                    })
+                         .then((response) => response.json())
+                         .then((data) => {
+                              console.warn(data, "success!");
+                              window.alert(data.message);
+                              window.location.replace("/index.html")
+                              localStorage.setItem("user", JSON.stringify(data.data));
+                              // Handle the API response data
+                              displayData(data);
+                         })
+                         .catch((error) => {
+                              console.error("Error:", error);
+                         });
+               }
+
+               function displayData(data) {
+                    // Display the API response on the webpage
+                    const apiResponseDiv = document.getElementById("apiResponse");
+                    apiResponseDiv.innerHTML = JSON.stringify(data, null, 2);
+               }
+          });
+     </script>
+</head>
+
+<body>
+     <div class="wrapper">
+          <h2>Registration</h2>
+          <form action="#">
+               <div class="input-box">
+                    <input type="text" id="name" placeholder="Enter your name" required>
+               </div>
+               <div class="input-box">
+                    <input type="text" id="email" placeholder="Enter your email" required>
+               </div>
+               <div class="input-box">
+                    <input type="number" id="mobile" placeholder="Enter your mobile" required>
+               </div>
+               <div class="input-box">
+                    <input type="password" id="password" placeholder="Create password" required>
+               </div>
+
+               <div class="policy">
+                    <input type="checkbox">
+                    <h3>I accept all terms & condition</h3>
+               </div>
+               <div class="input-box button">
+                    <input type="submit" value="Sign up" class="btn" id="fetchData" />
+               </div>
+               <div class="text">
+                    <h3>Already have an account? <a href="/index.html">Login now</a></h3>
+               </div>
+          </form>
+     </div>
+</body>
+
+</html>

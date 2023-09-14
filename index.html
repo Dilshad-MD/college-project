@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-------- title ----------->
+  <title>U.B Station</title>
+
+  <!-------- customer style link ----------->
+  <link rel="stylesheet" href="./css/style.css" />
+
+  <!-------- font awesome cdn link --------->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+  <!------- swipper cdn link ------------>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
+
+  <script>
+    async function fetchData() {
+      let response = await fetch(
+        "https://bookapi-f82x.onrender.com/book/getall"
+      );
+      response = await response.json();
+      console.warn(response, "jlkj");
+      // Assuming the response data is an array of post objects
+      document.getElementById("book").innerHTML =
+        response &&
+        response.data
+          .map(
+            (i) =>
+              `<div class="swiper-slide box">
+                    <div class="icons">
+                        <a href="" class="fas fa-search"></a>
+                        <a href="" class="fas fa-heart"></a>
+                        <a href="" class="fas fa-eye"></a>
+                    </div>
+
+                    <div class="image">
+                        <img src=${`https://bookapi-f82x.onrender.com/${i.url}`} alt="">
+                    </div>
+
+                    <div class="content">
+                        <h3>${i.name}</h3>
+                        <div class="price">Rs. ${i.price
+              } <span>$20.99</span></div>
+                        <a href="" class="btn">add to cart</a>
+                    </div>
+                </div>`
+          )
+          .join("");
+    }
+    fetchData();
+  </script>
+
+  <!-- load user data from localstorage script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Retrieve data from localStorage
+      const userData = localStorage.getItem("user");
+      console.log(userData);
+
+      if (userData) {
+        // If data exists, parse it (assuming it's stored as JSON)
+        const parsedUserData = JSON.parse(userData);
+
+        // Display the data on the webpage
+        const dataDisplay = document.getElementById("dataDisplay");
+        dataDisplay.textContent = `Hii, ${parsedUserData.name}`;
+        const dataDisplay1 = document.getElementById("dataDisplay1");
+      }
+
+
+
+      else {
+        // Handle the case when data doesn't exist in localStorage
+        const dataDisplay = document.getElementById("dataDisplay");
+        dataDisplay.textContent = "Login here.";
+      }
+    });
+  </script>
+  <!-- load user data from localStorage -->
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // script.js
+      document
+        .getElementById("fetchData")
+        .addEventListener("click", fetchData);
+
+      function fetchData(e) {
+        e.preventDefault();
+        // Get the values of email and password from the form
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        console.log("Email: ", email);
+        console.log("Password: ", password);
+        // Define the API endpoint and data to send
+        const apiUrl = "https://bookapi-f82x.onrender.com/user/login";
+        const requestData = {
+          // email: "xyz@gmail.com",
+          // pwd: "12345",
+          email: email,
+          pwd: password,
+        };
+
+        fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            // Add any required headers here
+          },
+          body: JSON.stringify(requestData),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.warn(data, "success!");
+            window.alert(data.message);
+            window.location.reload();
+            localStorage.setItem("user", JSON.stringify(data.data));
+            // Handle the API response data
+            displayData(data);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+
+      function displayData(data) {
+        // Display the API response on the webpage
+        const apiResponseDiv = document.getElementById("apiResponse");
+        apiResponseDiv.innerHTML = JSON.stringify(data, null, 2);
+      }
+    });
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // script.js
+      document
+        .getElementById("fetchData1")
+        .addEventListener("click", fetchData);
+
+      function fetchData(e) {
+        e.preventDefault();
+        window.alert("Are you sure you want to logout");
+        localStorage.clear();
+        window.location.reload();
+      }
+
+      function displayData(data) {
+        // Display the API response on the webpage
+        const apiResponseDiv = document.getElementById("apiResponse");
+        apiResponseDiv.innerHTML = JSON.stringify(data, null, 2);
+      }
+    });
+  </script>
+</head>
+
+<body>
+  <!--------- header section start ------------>
+  <header class="header">
+    <div class="header_one">
+      <a href="" class="logo"><i class="fas fa-book"> U.B Station </i></a>
+
+      <form action="" class="search-form">
+        <input id="search-box" type="search" placeholder="search here..." />
+        <label for="" class="fas fa-search"></label>
+      </form>
+
+      <div class="icons">
+        <div id="search-btn" class="fas fa-search"></div>
+        <a href="" class="fas fa-heart"></a>
+        <a href="" class="fas fa-shopping-cart"></a>
+        <div id="login-btn" class="fas fa-user"> <b id="dataDisplay"></b></div>
+        <div class="fas fa-sign-out-alt" id="fetchData1" style='font-size:25px;color: #91fb07ea;'> </div>
+
+      </div>
+    </div>
+
+    <!----- navigation bar -------->
+    <div class="header_two">
+      <div class="navbar">
+        <a href="#home">Home</a>
+        <a href="#featured">Featured</a>
+        <a href="#arrivals">Arrivals</a>
+        <a href="#reviews">Reviews</a>
+        <a href="#blogs">Blogs</a>
+      </div>
+    </div>
+  </header>
+
+  <!-------- bottom navbar start ----------->
+  <div class="bottom-navbar">
+    <a href="#home" class="fas fa-home"></a>
+    <a href="#featured" class="fas fa-list"></a>
+    <a href="#arrivals" class="fas fa-tags"></a>
+    <a href="#blogs" class="fas fa-app-store"></a>
+  </div>
+
+  <!-------- login form start ----------->
+  <div class="login-form-container">
+    <div id="close-login-btn" class="fas fa-times"></div>
+
+    <form action="">
+      <h3>sign in</h3>
+      <span>email</span>
+      <input type="email" id="email" class="box" placeholder="enter your email" required />
+      <span>password</span>
+      <input type="password" id="password" class="box" placeholder="enter your password" required />
+
+      <div class="check-box">
+        <input type="checkbox" id="remember-me" />
+        <label for="remember-me">remember me</label>
+      </div>
+
+      <input type="submit" value="sign in" class="btn" id="fetchData" />
+      <p>forgot password? <a href="">click here</a></p>
+      <p>dont't have an account ? <a id="login-btn" href="/register.html">create one</a></p>
+      <p></p>
+    </form>
+  </div>
+
+
+  <!-------- home section start ----------->
+  <section class="home" id="home">
+    <div class="row">
+      <div class="content">
+        <h3>Welcome to Used Book Station</h3>
+        <p>
+          Buying Used Books saves your 
+          resources, Environmet as well as Money.
+        </p>
+        <a href="" class="btn">shop now</a>
+      </div>
+
+      <div class="swiper books-list">
+        <div class="swiper-wrapper">
+          <a href="" class="swiper-slide"><img src="./image/book-1.png" alt="" /></a>
+          <a href="" class="swiper-slide"><img src="./image/book-2.png" alt="" /></a>
+          <a href="" class="swiper-slide"><img src="./image/book-3.png" alt="" /></a>
+          <a href="" class="swiper-slide"><img src="./image/book-4.png" alt="" /></a>
+          <a href="" class="swiper-slide"><img src="./image/book-5.png" alt="" /></a>
+          <a href="" class="swiper-slide"><img src="./image/book-6.png" alt="" /></a>
+        </div>
+
+        <img class="stand" src="./image/stand.png" alt="" />
+      </div>
+    </div>
+  </section>
+
+  <!-------- home section ends  ----------->
+
+  <!-------- icons section start  ----------->
+
+  <section class="icons-container">
+    <div class="icons">
+      <i class="fas fa-money"></i>
+      <div class="content">
+        <h3 style="margin-top: 50px;">Methods of payment</h3>
+        <p>
+          Cash on Delivery.<br>
+          UPI.<br>
+          Credit Card.
+        </p>
+      </div>
+    </div>
+
+    <div class="icons">
+      <i class="fas fa-facebook"></i>
+      <div class="content">
+        <h3 style="margin-bottom: -10px;">Books with Great Condition</h3>
+        
+      </div>
+    </div>
+
+    <div class="icons" style="margin-bottom: 20px;">
+      <i class="fas fa-headset"></i>
+      <div class="content" >
+        <h3 style="margin-top: 30px;">Consumer services</h3>
+        <p>+91 9636815035<br>
+          UBSTATION@gmail.com
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-------- featured section start  ----------->
+
+  <section class="featured" id="featured">
+    <div class="heading"><span>featured books</span></div>
+
+    <div class="swiper featured-slider" >
+      <div id="book" class="swiper-wrapper" style="margin-left: 80px;"   >
+
+      </div>
+
+      <div class="swiper-button-next" style="color: #0ccd0cde;" ></div>
+      <div class="swiper-button-prev" style="color: #0ccd0cde;" ></div>
+    </div>
+  </section>
+
+  <!-------- news letter section start  ----------->
+
+  <section class="newletter">
+    <form action="">
+      <h3>subscribe for latest update</h3>
+      <input type="email" placeholder="enter your email" class="box" />
+      <input type="submit" value="subscribe" class="btn" />
+    </form>
+  </section>
+
+  <!-------- arrivals section start  ----------->
+
+  <section class="arrivals" id="arrivals">
+    <div class="heading"><span>new arrivals</span></div>
+    <div class="swiper arrivals-slider">
+      <div class="swiper-wrapper">
+        <a href="" class="swiper-slide box">
+          <div class="image">
+            <img src="./image/book-1.png" alt="" />
+          </div>
+          <div class="content">
+            <h3>new arrivals</h3>
+            <div class="price">MRP 20 <span>MRP 50</span></div>
+            <div class="stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+            </div>
+          </div>
+        </a>
+
+        <a href="" class="swiper-slide box">
+          <div class="image">
+            <img src="./image/book-2.png" alt="" />
+          </div>
+          <div class="content">
+            <h3>new arrivals</h3>
+            <div class="price">MRP 60 <span>MRP 110</span></div>
+            <div class="stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+            </div>
+          </div>
+        </a>
+
+        <a href="" class="swiper-slide box">
+          <div class="image">
+            <img src="./image/book-3.png" alt="" />
+          </div>
+          <div class="content">
+            <h3>new arrivals</h3>
+            <div class="price">MRP 80<span>MRP 95</span></div>
+            <div class="stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+            </div>
+          </div>
+        </a>
+
+        <a href="" class="swiper-slide box">
+          <div class="image">
+            <img src="./image/book-4.png" alt="" />
+          </div>
+          <div class="content">
+            <h3>new arrivals</h3>
+            <div class="price">MRP 200 <span>MRP 225</span></div>
+            <div class="stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+            </div>
+          </div>
+        </a>
+
+        <a href="" class="swiper-slide box">
+          <div class="image">
+            <img src="./image/book-5.png" alt="" />
+          </div>
+          <div class="content">
+            <h3>new arrivals</h3>
+            <div class="price">MRP150 <span>MRP 209</span></div>
+            <div class="stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="swiper arrivals-slider">
+      <div class="swiper-wrapper">
+        <a href="" class="swiper-slide box">
+          <div class="image">
+            <img src="./image/book-6.png" alt="" />
+          </div>
+          <div class="content">
+            <h3>new arrivals</h3>
+            <div class="price">MRP 150 <span>MRP 250</span></div>
+            <div class="stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+            </div>
+          </div>
+        </a>
+
+        <a href="" class="swiper-slide box">
+          <div class="image">
+            <img src="./image/book-7.png" alt="" />
+          </div>
+          <div class="content">
+            <h3>new arrivals</h3>
+            <div class="price">MRP 150 <span>MRP 280</span></div>
+            <div class="stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+            </div>
+          </div>
+        </a>
+
+        <a href="" class="swiper-slide box">
+          <div class="image">
+            <img src="./image/book-8.png" alt="" />
+          </div>
+          <div class="content">
+            <h3>new arrivals</h3>
+            <div class="price">MRP 150 <span>MRP 284</span></div>
+            <div class="stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+            </div>
+          </div>
+        </a>
+
+        <a href="" class="swiper-slide box">
+          <div class="image">
+            <img src="./image/book-9.png" alt="" />
+          </div>
+          <div class="content">
+            <h3>new arrivals</h3>
+            <div class="price">MRP100 <span>MRP 299</span></div>
+            <div class="stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+            </div>
+          </div>
+        </a>
+
+        <a href="" class="swiper-slide box">
+          <div class="image">
+            <img src="./image/book-10.png" alt="" />
+          </div>
+          <div class="content">
+            <h3>new arrivals</h3>
+            <div class="price">MRP200 <span>MRP 300</span></div>
+            <div class="stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-------- deal section start  ----------->
+
+  <section class="deal">
+    <div class="content">
+      <h3>Give the old books a New Home!</h3>
+      <h1><u>USED BOOKS!</u></h1>
+      <p>
+        Used books are precious for every student in them selves 
+        It presents the way of study to score good marks.
+      </p>
+      <a href="" class="btn">shop now</a>
+    </div>
+
+    <div class="image">
+      <img src="./image/deal-img.jpg" alt="" />
+    </div>
+  </section>
+
+  <!-------- review section start  ----------->
+  <section class="reviews" id="reviews">
+    <h1 class="heading"><span>client's reviews</span></h1>
+
+    <div class="swiper reviews-slider">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide box">
+          <img src="./image/pic-1.png" alt="" />
+          <h3>Supnesh Lohar</h3>
+          <p>
+            A good Inntiative towards bringing the old books 
+            back into cycle.
+          </p>
+
+          <div class="stars" style="color: gold;">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+          </div>
+        </div>
+
+        <div class="swiper-slide box">
+          <img src="./image/pic-2.png" alt="" />
+          <h3>R.K Singh</h3>
+          <p>
+           Providing old books at cheap rates saved lots of money.
+          </p>
+
+          <div class="stars" style="color: gold;">
+            <i class="fas fa-star" ></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+          </div>
+        </div>
+
+        <div class="swiper-slide box">
+          <img src="./image/pic-3.png" alt="" />
+          <h3>Janak Vyas</h3>
+          <p>
+            Using old books again prevents lots of paper waste.
+          </p>
+
+          <div class="stars" style="color: gold;">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+          </div>
+        </div>
+
+        <div class="swiper-slide box">
+          <img src="./image/pic-4.png" alt="" />
+          <h3>Shlok Soni</h3>
+          <p>
+            A good plateform for the user intersted in buying used books insted of going for new books.
+          </p>
+
+          <div class="stars" style="color: gold;">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+          </div>
+        </div>
+
+        <div class="swiper-slide box">
+          <img src="./image/pic-5.png" alt="" />
+          <h3>Paikshal Prajapati</h3>
+          <p>
+            An intersting and pocket friendly plateform with the initiative toward sustain resorces.
+          </p>
+
+          <div class="stars" style="color: gold;">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-------- blog section start  ----------->
+  <section class="blogs" id="blogs">
+    
+      <div class="heading"><span>our blogs</span></div>
+
+    <div class="swiper blog-slider">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide box">
+          <div class="image">
+            <img src="./image/blog-1.jpg" alt="" />
+          
+    </div>
+
+          
+
+          <div class="content">
+            <h3>Price On Peak!</h3>
+            <p>
+            Everyone I interviewed agreed that textbook prices are too high and that 
+            the rising prices cause them aggravation. Each year, prices of textbooks 
+            continue to rise, and students continue to suffer.
+            </p>
+            <a href="" class="btn" style="color: rgb(134, 237, 32);">read more</a>
+          </div>
+        </div>
+
+        <div class="swiper-slide box">
+          <div class="image">
+            <img src="./image/blog-3.jpg" alt="" />
+          </div>
+
+          <div class="content">
+            <h3>Unrecycled printed Papers!</h3>
+            <p>
+              India consumes around 13 million ton of paper annually is able to 
+              recover only between 25-28% which will mean the large chunk of waste
+              paper do not come back to the paper mills for recycling.          
+            </p>
+            <a href="" class="btn" style="color: rgb(134, 237, 32);">read more</a>
+          </div>
+        </div>
+
+        <div class="swiper-slide box">
+          <div class="image">
+            <img src="./image/blog-4.jpg" alt="" />
+          </div>
+
+          <div class="content">
+            <h3>Unique Ways to Utilise Your Old Books!</h3>
+            <p>
+              1. Sell Your Books.<br>
+              2. Donate Your Books.<br>
+              3. Make a free Book Box.<br>
+              4. Rent Your Books.<br>
+            </p>
+            <a href="" class="btn" style="color: rgb(134, 237, 32);">read more</a>
+          </div>
+        </div>
+
+        <div class="swiper-slide box">
+          <div class="image">
+            <img src="./image/blog-5.jpg" alt="" />
+          </div>
+
+          <div class="content">
+            <h3>An initiative towars the
+              availablity of books for all!
+            </h3>
+            <p>
+            In almost all developed countries, 
+            there are book banks and libraries from where the textbooks can be purchased both used and unused 
+            one and can be returned or resold after use.             
+            </p>
+            <a href="" class="btn" style="color: rgb(134, 237, 32);" >read more</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-------- footer section start  ----------->
+
+  <section class="footer">
+    <div class="box-container">
+      <div class="box">
+        <h3>our locations</h3>
+        <a href=""><i class="fas fa-map-marker-alt"></i>india</a>
+      </div>
+
+      <div class="box">
+        <h3>quick links</h3>
+        <a href=""><i class="fas fa-arrow-right"></i>home</a>
+        <a href=""><i class="fas fa-arrow-right"></i>featured</a>
+        <a href=""><i class="fas fa-arrow-right"></i>arrivals</a>
+        <a href=""><i class="fas fa-arrow-right"></i>blogs</a>
+      </div>
+
+      <div class="box">
+        <h3>exatra links</h3>
+        <a href=""><i class="fas fa-arrow-right"></i>account info</a>
+        <a href=""><i class="fas fa-arrow-right"></i>ordered items</a>
+        <a href=""><i class="fas fa-arrow-right"></i>privacy policy</a>
+        <a href=""><i class="fas fa-arrow-right"></i>payment method</a>
+        <a href=""><i class="fas fa-arrow-right"></i>our services</a>
+      </div>
+
+      <div class="box">
+        <h3>contact info</h3>
+        <a href=""><i class="fas fa-phone"></i>+919636815035</a>
+        <a href=""><i class="fas fa-phone"></i>+919905951918</a>
+        <a href=""><i class="fas fa-envelope"></i>UBSTATION@gmail.comm</a>
+        <img src="./image/worldmap.png" alt="" class="map" />
+      </div>
+    </div>
+
+    <div class="share">
+      <a href=""><i class="fa fa-facebook"></i></a>
+      <a href=""><i class="fa fa-twitter"></i></a>
+      <a href=""><i class="fa fa-instagram"></i></a>
+      <a href=""><i class="fa fa-linkedin"></i></a>
+      <a href=""><i class="fa fa-square-pinterest"></i></a>
+    </div>
+
+    <div class="credit">
+      created by <span>Team U.B Station.</span> | all rights reserved
+    </div>
+  </section>
+
+  <!---- swiper cdn link ---------->
+  <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+
+  <!------- customer script link --------->
+  <script src="./js/script.js"></script>
+</body>
+
+</html>
